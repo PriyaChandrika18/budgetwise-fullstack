@@ -1,0 +1,65 @@
+###############################
+# Global
+###############################
+.DS_Store
+Thumbs.db
+*.log
+*.tmp
+*.swp
+*.swo
+
+###############################
+# Java / Spring Boot (Backend)
+###############################
+backend/target/
+backend/.classpath
+backend/.project
+backend/.settings/
+backend/.factorypath
+backend/.springBeans
+backend/.idea/
+backend/*.iml
+
+# Maven
+backend/.mvn/wrapper/maven-wrapper.jar
+backend/.mvn/wrapper/maven-wrapper.properties
+backend/mvnw
+backend/mvnw.cmd
+
+###############################
+# Node / React (Frontend)
+###############################
+frontend/node_modules/
+frontend/build/
+frontend/.cache/
+frontend/.env.local
+frontend/.env.*.local
+frontend/npm-debug.log*
+frontend/yarn-debug.log*
+frontend/yarn-error.log*
+
+###############################
+# VS Code
+###############################
+.vscode/
+.history/
+
+###############################
+# IntelliJ
+###############################
+.idea/
+*.iws
+*.iml
+*.ipr
+
+###############################
+# Windows
+###############################
+ehthumbs.db
+Desktop.ini
+
+###############################
+# Git Submodule Cleanup (important)
+###############################
+backend/.git
+frontend/.git
