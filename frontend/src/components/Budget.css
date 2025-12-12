@@ -1,0 +1,254 @@
+/* Overall page */
+.budget-page {
+  padding: 24px 32px;
+  background: linear-gradient(135deg, #f5e8ff, #e6f0ff);
+  min-height: 100vh;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Arial,
+    sans-serif;
+}
+
+/* Top header */
+.budget-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.budget-header h2 {
+  margin: 0;
+  font-size: 24px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.budget-subtitle {
+  margin: 4px 0 0;
+  color: #6b7280;
+  font-size: 14px;
+}
+
+.budget-header-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.budget-period-select {
+  border-radius: 999px;
+  padding: 8px 14px;
+  border: 1px solid #e5e7eb;
+  background: #ffffff;
+  font-size: 13px;
+}
+
+/* Buttons */
+.btn-primary {
+  border-radius: 999px;
+  padding: 9px 18px;
+  border: none;
+  background: #2563eb;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(37, 99, 235, 0.35);
+}
+
+.btn-primary:hover {
+  background: #1d4ed8;
+}
+
+.btn-outline {
+  border-radius: 999px;
+  padding: 9px 14px;
+  border: 1px solid #d1d5db;
+  background: #ffffff;
+  color: #111827;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.btn-outline:hover {
+  background: #f9fafb;
+}
+
+/* Overall overview card */
+.budget-overview-card {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 18px 20px;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+  margin-bottom: 24px;
+}
+
+.overview-top-row,
+.overview-bottom-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 13px;
+}
+
+.overview-label {
+  font-weight: 600;
+  color: #4b5563;
+}
+
+.overview-amount {
+  color: #111827;
+}
+
+.overview-progress {
+  margin: 10px 0;
+  height: 8px;
+  border-radius: 999px;
+  background: #e5e7eb;
+  overflow: hidden;
+}
+
+.overview-progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #22c55e, #16a34a);
+  border-radius: inherit;
+}
+
+/* Cards row */
+.budget-cards-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 18px;
+}
+
+/* Single card */
+.budget-card {
+  flex: 0 0 260px;
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 16px 18px 14px;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.06);
+  border: 1px solid #e5e7eb;
+}
+
+.budget-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.budget-card-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.budget-card-icon {
+  font-size: 20px;
+}
+
+.budget-card-header h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+  color: #111827;
+}
+
+.budget-card-caption {
+  margin: 0;
+  font-size: 11px;
+  color: #9ca3af;
+}
+
+.card-menu-btn {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-size: 16px;
+  color: #9ca3af;
+}
+
+.budget-card-amounts {
+  margin-top: 12px;
+}
+
+.card-main-amount {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 700;
+  color: #111827;
+}
+
+.card-main-label {
+  font-size: 11px;
+  font-weight: 500;
+  color: #6b7280;
+}
+
+.card-limit {
+  margin: 4px 0 0;
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.budget-card-progress {
+  height: 6px;
+  border-radius: 999px;
+  background: #f3f4f6;
+  overflow: hidden;
+  margin: 10px 0 8px;
+}
+
+.budget-card-progress-fill {
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #f97316, #ef4444);
+}
+
+.budget-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 11px;
+  margin-top: 4px;
+}
+
+.card-footer-pill {
+  padding: 3px 10px;
+  border-radius: 999px;
+  font-weight: 500;
+}
+
+.card-footer-pill.warning {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.card-footer-remaining {
+  color: #6b7280;
+}
+
+/* Small screens */
+@media (max-width: 768px) {
+  .budget-page {
+    padding: 16px;
+  }
+
+  .budget-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+
+  .budget-header-right {
+    flex-wrap: wrap;
+    justify-content: flex-start;
+  }
+
+  .budget-cards-row {
+    flex-direction: column;
+  }
+
+  .budget-card {
+    width: 100%;
+  }
+}

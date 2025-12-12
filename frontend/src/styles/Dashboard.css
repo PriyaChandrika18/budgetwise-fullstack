@@ -1,0 +1,189 @@
+/* Dashboard global container
+   Caps width to keep charts/cards tidy on large screens.
+*/
+.dashboard-container {
+  max-width: 1200px;      /* main content width */
+  margin: 24px auto;      /* center the page */
+  padding: 18px;
+  box-sizing: border-box;
+  background: linear-gradient(180deg, #fbfbfd 0%, #fff 100%);
+  min-height: calc(100vh - 40px);
+  font-family: "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  color: #111827;
+}
+
+/* Page title */
+.dashboard-container h2 {
+  margin: 6px 0 18px;
+  font-size: 22px;
+  font-weight: 700;
+  color: #2b2b7a;
+}
+
+/* ---------- Summary cards ---------- */
+.summary {
+  display: flex;
+  gap: 18px;
+  align-items: stretch;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.card {
+  flex: 1 1 260px;         /* grow / shrink with min width */
+  min-width: 220px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 18px 20px;
+  box-shadow: 0 8px 22px rgba(19, 24, 50, 0.06);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.card h3 {
+  margin: 0 0 6px;
+  font-size: 14px;
+  color: #6b7280;
+  font-weight: 600;
+}
+
+.card p {
+  margin: 0;
+  font-size: 20px;
+  font-weight: 700;
+  color: #111827;
+}
+
+/* Accent borders for cards */
+.card.income { border-left: 6px solid #16a34a; }
+.card.expense { border-left: 6px solid #ef4444; }
+.card.balance { border-left: 6px solid #6366f1; }
+
+/* ---------- Filters row ---------- */
+.filters {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-bottom: 18px;
+}
+
+.filters input[type="text"],
+.filters input[type="month"] {
+  border: 1px solid #e6e6ee;
+  padding: 8px 10px;
+  border-radius: 8px;
+  min-width: 160px;
+  background: #fff;
+  box-shadow: none;
+}
+
+.filters button {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  color: #fff;
+}
+
+.filters button:first-of-type { background: #2563eb; } /* Export PDF */
+.filters button:last-of-type { background: #0ea5a1; } /* Export Excel */
+
+/* ---------- Chart layout ---------- */
+.chart-section {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+  align-items: start;
+}
+
+/* Chart box: card-like wrapper that limits the chart size */
+.chart-box {
+  background: #fff;
+  border-radius: 12px;
+  padding: 14px;
+  box-shadow: 0 10px 30px rgba(7, 10, 28, 0.06);
+  box-sizing: border-box;
+}
+
+/* Chart titles */
+.chart-box h3 {
+  margin-top: 0;
+  margin-bottom: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+/* Important: constrain canvas size inside chart-box.
+   Chart.js is set to maintainAspectRatio: false, so it will fill the wrapper.
+*/
+.chart-box > div,
+.chart-box canvas {
+  width: 100% !important;
+  height: 320px !important;   /* default height for charts */
+  display: block;
+}
+
+/* Smaller chart footprint used elsewhere (category / timeline) */
+.chart-box.small-chart > div,
+.chart-box.small-chart canvas {
+  height: 240px !important;
+}
+
+/* For the single-column (spending, timeline) chart boxes below, we'll rely on inline style height:280px.
+   This rule ensures any chart inside a wrapper respects that container if set via inline style.
+*/
+.chart-box[style] > div,
+.chart-box[style] canvas {
+  height: auto !important;
+  max-height: 420px;
+}
+
+/* ---------- Spending list / transactions ---------- */
+.transactions-section {
+  margin-top: 20px;
+}
+
+.transaction-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 8px;
+  margin-bottom: 8px;
+  background: #fff;
+  box-shadow: 0 6px 14px rgba(10, 12, 30, 0.03);
+}
+
+.transaction-item .green { color: #16a34a; font-weight: 700; }
+.transaction-item .red { color: #ef4444; font-weight: 700; }
+
+/* ---------- Responsive adjustments ---------- */
+@media (max-width: 980px) {
+  .chart-section {
+    grid-template-columns: 1fr;
+  }
+
+  .chart-box > div,
+  .chart-box canvas {
+    height: 300px !important;
+  }
+
+  .card { min-width: 200px; }
+}
+
+@media (max-width: 640px) {
+  .dashboard-container {
+    padding: 12px;
+  }
+
+  .chart-box > div,
+  .chart-box canvas {
+    height: 260px !important;
+  }
+
+  .filters input[type="text"] { min-width: 120px; }
+}

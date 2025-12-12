@@ -1,0 +1,53 @@
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+}
+
+.modal-container {
+  background: white;
+  padding: 25px;
+  width: 350px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.modal-container h2 {
+  margin-bottom: 15px;
+}
+
+.modal-input {
+  width: 100%;
+  padding: 10px;
+  margin: 8px 0;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+}
+
+.btn-group {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+}
+
+.cancel-btn {
+  background: #ccc;
+  padding: 8px 15px;
+  border-radius: 8px;
+  width: 45%;
+}
+
+.save-btn {
+  background: #4CAF50;
+  color: white;
+  padding: 8px 15px;
+  border-radius: 8px;
+  width: 45%;
+}

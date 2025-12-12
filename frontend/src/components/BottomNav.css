@@ -1,0 +1,43 @@
+.bottom-nav {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background-color: #fff8dc;
+  border-top: 1px solid #eee;
+  padding: 6px 0;
+  box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.05);
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 11.5px;
+  cursor: pointer;
+  color: #555;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.icon {
+  font-size: 15px;
+  margin-bottom: 2px;
+}
+
+.nav-item:hover {
+  transform: scale(1.05);
+  color: #d4aa00;
+}
+
+.nav-item.active {
+  color: #e6b800;
+  font-weight: 600;
+}
+
+.nav-item p {
+  margin: 0;
+  font-size: 10.5px;
+}

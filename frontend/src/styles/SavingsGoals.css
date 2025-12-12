@@ -1,0 +1,175 @@
+/* -------------------------
+   🌟 Page Layout
+-------------------------- */
+.container {
+  max-width: 850px;
+  margin: auto;
+  padding: 20px;
+  text-align: center;
+  font-family: "Poppins", sans-serif;
+}
+
+h2 {
+  font-size: 26px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* -------------------------
+   📝 Goal Input Form
+-------------------------- */
+.goal-form {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 25px;
+}
+
+.goal-form input {
+  padding: 10px;
+  width: 180px;
+  border-radius: 6px;
+  border: 1px solid #aaa;
+  outline: none;
+  font-size: 14px;
+}
+
+.goal-form button {
+  padding: 10px 15px;
+  background-color: #28a745;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.goal-form button:hover {
+  background-color: #218838;
+}
+
+/* -------------------------
+   🗂 Goal List
+-------------------------- */
+.goal-list {
+  margin-top: 20px;
+}
+
+.goal-item {
+  background: #fff;
+  padding: 18px;
+  margin-bottom: 15px;
+  border-radius: 10px;
+  text-align: left;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+}
+
+.goal-item h3 {
+  margin: 0;
+  font-size: 18px;
+  margin-bottom: 5px;
+  color: #444;
+}
+
+.goal-item p {
+  margin: 4px 0;
+  font-size: 14px;
+}
+
+/* -------------------------
+   📌 Buttons inside Goal
+-------------------------- */
+.goal-actions {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+.contribute-btn {
+  background-color: #1e90ff;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.contribute-btn:hover {
+  background-color: #1877cc;
+}
+
+.delete-btn {
+  background: #d9534f;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.delete-btn:hover {
+  background: #b52b27;
+}
+
+.edit-btn {
+  background: #ff9800;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  border: none;
+  cursor: pointer;
+}
+
+.edit-btn:hover {
+  background: #e58900;
+}
+
+/* -------------------------
+   📌 Progress Bar
+-------------------------- */
+.progress-container {
+  width: 100%;
+  background: #eee;
+  border-radius: 10px;
+  height: 10px;
+  margin: 5px 0 10px;
+}
+
+.progress-bar {
+  height: 10px;
+  background: #36A2EB;
+  border-radius: 10px;
+  transition: width 0.4s ease;
+}
+
+.progress-text {
+  font-size: 12px;
+  color: #606060;
+}
+
+/* -------------------------
+   📊 Charts
+-------------------------- */
+.chart-section {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 30px;
+  width: 100%;
+  justify-content: center;
+}
+
+.chart-box {
+  width: 45%;
+  min-width: 350px;
+  background: #ffffff;
+  padding: 18px;
+  border-radius: 12px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.12);
+  text-align: center;
+}
+
+.chart-box canvas {
+  width: 100% !important;
+  max-height: 300px !important;
+}

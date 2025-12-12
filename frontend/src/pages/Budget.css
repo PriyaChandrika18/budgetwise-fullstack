@@ -1,0 +1,144 @@
+/* page layout */
+.budget-page {
+  padding: 28px 48px;
+  background: linear-gradient(180deg, #fcfbfb 0%, #f8f5f2 100%);
+  min-height: 100vh;
+  box-sizing: border-box;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  color: #222831;
+}
+
+/* header */
+.budget-header {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+.budget-header h1 {
+  margin: 0;
+  font-size: 26px;
+  font-weight: 700;
+}
+.back-arrow { text-decoration: none; color: #222; font-size: 20px; }
+
+/* controls */
+.budget-controls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+.budget-controls label { font-weight: 600; margin-right: 6px; color: #444; }
+.budget-controls input[type="month"] {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #e6e2de;
+  background: #fff;
+}
+.budget-btn-primary {
+  background: #f0c419;
+  color: #111;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+}
+.budget-error { color: #d9534f; margin-left: 10px; }
+
+/* container: center column + side summary */
+.budget-container {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* main card with budgets */
+.budget-card {
+  width: 480px;
+  background: #fff;
+  border-radius: 14px;
+  padding: 20px;
+  box-shadow: 0 8px 20px rgba(20,20,30,0.06);
+}
+.card-title { margin: 0 0 12px 0; font-size: 18px; font-weight: 700; color: #333; }
+
+/* rows for categories */
+.budget-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 12px;
+  border-radius: 10px;
+  background: linear-gradient(180deg,#fff,#fbfbfb);
+  margin-bottom: 12px;
+  box-shadow: 0 4px 14px rgba(15,15,20,0.03);
+}
+.row-left { display:flex; gap:12px; align-items:center; }
+.icon-placeholder {
+  width: 52px; height: 52px; border-radius: 12px; display:flex; align-items:center; justify-content:center;
+  background: linear-gradient(180deg,#fff,#f7f6f6); box-shadow: inset 0 1px 0 rgba(255,255,255,0.6);
+  font-size: 20px;
+}
+.row-meta { min-width: 0; }
+.cat-name { font-weight: 700; color: #222; }
+.cat-sub { font-size: 13px; color: #8a8a8a; margin-top: 4px; }
+.progress-bar {
+  height: 8px;
+  background: #f0ece9;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+.progress-bar.small { height:6px; margin-top:8px; }
+.progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg,#ffbe3d,#ff9f43);
+  width: 0%;
+  transition: width .6s ease;
+}
+.progress-fill.goal { background: linear-gradient(90deg,#8b5cf6,#6c5ce7); }
+
+.row-right { font-weight: 700; color: #0a7a3e; }
+
+/* savings goals */
+.section-title { margin-top: 18px; margin-bottom: 8px; font-weight: 700; color: #333; }
+.goal-input-row { display:flex; gap:8px; margin-bottom: 12px; }
+.goal-input { flex:1; padding:8px 10px; border-radius:8px; border:1px solid #eee; }
+.add-goal-btn { background:#f0c419; border:none; padding:8px 12px; border-radius:8px; cursor:pointer; }
+
+/* individual goal */
+.goal-row {
+  display:flex; align-items:center; justify-content:space-between; gap:10px;
+  padding:12px; border-radius:10px; background:linear-gradient(180deg,#fff,#fbfbfb); margin-bottom:10px;
+  box-shadow: 0 4px 10px rgba(10,10,15,0.03);
+}
+.goal-left { display:flex; gap:12px; align-items:center; }
+.goal-icon { width:46px; height:46px; border-radius:10px; display:flex; align-items:center; justify-content:center; background:#fff; box-shadow: inset 0 1px 0 rgba(255,255,255,0.6); }
+.goal-name { font-weight:700; }
+.goal-sub { font-size:13px; color:#8a8a8a; }
+.goal-delete { background: transparent; border: none; color: #d9534f; font-size:18px; cursor:pointer; }
+
+/* summary card on right */
+.budget-summary {
+  width: 240px;
+  background: #fff;
+  border-radius: 12px;
+  padding: 18px;
+  box-shadow: 0 10px 30px rgba(15,15,20,0.04);
+  height: fit-content;
+}
+.budget-summary h3 { margin-top: 0; }
+.summary-row { display:flex; justify-content:space-between; padding: 10px 0; border-bottom: 1px dashed #eee; }
+.summary-row:last-child { border-bottom:none; }
+.summary-value { font-weight:700; color:#0a7a3e; }
+
+/* small responsive tweak */
+@media (max-width: 900px) {
+  .budget-container { flex-direction:column; align-items:center; }
+  .budget-card { width: 92%; }
+  .budget-summary { width: 92%; margin-top: 18px; }
+}

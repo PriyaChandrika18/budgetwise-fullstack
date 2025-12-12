@@ -1,0 +1,234 @@
+/* Budget.css – new theme for Budget page */
+
+/* Page background */
+.budget-page {
+  background: #f4f6fb;              /* soft grey-blue */
+  min-height: 100vh;
+  padding: 24px 32px;
+  box-sizing: border-box;
+  font-family: "Inter", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont,
+    "Helvetica Neue", Arial, sans-serif;
+}
+
+/* Center white card */
+.budget-card {
+  max-width: 980px;
+  margin: 0 auto;
+  background: #ffffff;
+  border-radius: 18px;
+  padding: 24px 28px 30px;
+  box-shadow: 0 14px 40px rgba(15, 23, 42, 0.12);
+}
+
+/* Main title */
+.budget-card > h1 {
+  font-size: 26px;
+  font-weight: 700;
+  margin: 0 0 10px;
+}
+
+/* Optional subtitle (if you add one) */
+.budget-subtitle {
+  font-size: 14px;
+  color: #6b7280;
+  margin-bottom: 18px;
+}
+
+/* --- Month & refresh row --- */
+.budget-month-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 18px;
+}
+
+.budget-month-row label {
+  font-size: 13px;
+  color: #4b5563;
+  margin-right: 4px;
+}
+
+.budget-month-row input[type="month"] {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  font-size: 14px;
+  background: #f9fafb;
+  outline: none;
+}
+
+.budget-month-row input[type="month"]:focus {
+  border-color: #2563eb;
+  box-shadow: 0 0 0 2px rgba(37, 99, 235, 0.12);
+}
+
+/* Refresh button */
+.budget-btn-primary {
+  background: #2563eb;
+  color: #ffffff;
+  border: none;
+  border-radius: 999px;
+  padding: 8px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 8px 22px rgba(37, 99, 235, 0.25);
+}
+
+.budget-btn-primary:hover {
+  background: #1d4ed8;
+}
+
+.budget-btn-primary:active {
+  transform: translateY(1px);
+}
+
+/* Error text */
+.budget-error {
+  font-size: 13px;
+  color: #dc2626;
+  margin-left: 8px;
+}
+
+/* --- Layout for sections & summary --- */
+.budget-layout {
+  display: grid;
+  grid-template-columns: 2.1fr 1.1fr;
+  gap: 22px;
+  margin-top: 12px;
+}
+
+@media (max-width: 900px) {
+  .budget-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* All sections (Per-category, Savings, Summary side) */
+.budget-section {
+  margin-bottom: 20px;
+}
+
+.budget-section h2 {
+  font-size: 18px;
+  margin-bottom: 10px;
+}
+
+.budget-section small,
+.budget-empty {
+  font-size: 13px;
+  color: #6b7280;
+}
+
+/* split left side sections */
+.budget-left {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Summary card on the right */
+.budget-summary-card {
+  background: #f9fafb;
+  border-radius: 14px;
+  padding: 16px 18px;
+  border: 1px solid #e5e7eb;
+}
+
+/* Summary title */
+.budget-summary-card h2 {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+/* Summary rows */
+.budget-summary-row {
+  display: flex;
+  justify-content: space-between;
+  margin: 4px 0;
+  font-size: 14px;
+}
+
+.budget-summary-label {
+  color: #4b5563;
+}
+
+.budget-summary-value {
+  font-weight: 600;
+}
+
+/* highlight positive / negative if you want */
+.budget-summary-value.income {
+  color: #16a34a;
+}
+
+.budget-summary-value.expense {
+  color: #dc2626;
+}
+
+/* --- Savings Goals form + list --- */
+.budget-goals-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.budget-goals-form input[type="text"],
+.budget-goals-form input[type="number"] {
+  flex: 1 1 160px;
+  min-width: 0;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  font-size: 14px;
+}
+
+.budget-goals-form button {
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: none;
+  background: #22c55e;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.budget-goals-form button:hover {
+  background: #16a34a;
+}
+
+.budget-goal-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  font-size: 14px;
+  margin-top: 6px;
+}
+
+.budget-goal-item button {
+  border: none;
+  background: #fee2e2;
+  color: #b91c1c;
+  padding: 4px 8px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 12px;
+}
+
+/* --- Per-category budgets list (if you later add) --- */
+.budget-category-item {
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background: #f9fafb;
+  margin-top: 6px;
+  font-size: 14px;
+}
