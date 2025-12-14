@@ -2,161 +2,134 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./Budget.css";
 
-const MOCK_CATEGORIES = [
-  { id: 1, name: "Food & Dining", budget: 2000, spent: 800 },
-  { id: 2, name: "Transportation", budget: 1600, spent: 800 },
-  { id: 3, name: "Entertainment", budget: 800, spent: 300 },
-  { id: 4, name: "Shopping", budget: 400, spent: 300 },
-];
-
-const MOCK_GOALS = [
-  { id: 1, name: "Vacation Fund", target: 2500, saved: 500 },
-  { id: 2, name: "Emergency Fund", target: 1000, saved: 200 },
-];
+const CATEGORY_LIMITS = {
+  Food: 2000,
+  Travel: 1600,
+  Shopping: 400,
+  Health: 1000,
+  Other: 800,
+};
 
 export default function Budget() {
-  const [selectedMonth, setSelectedMonth] = useState(() => {
-    const now = new Date();
-    return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
-  });
+  const userId = Number(localStorage.getItem("userId")) || 1;
 
+  const [transactions, setTransactions] = useState([]);
   const [categories, setCategories] = useState([]);
   const [goals, setGoals] = useState([]);
-  const [error, setError] = useState("");
-  const [newGoalName, setNewGoalName] = useState("");
-  const [newGoalTarget, setNewGoalTarget] = useState("");
 
+  // 🔹 FETCH DATA
   useEffect(() => {
-    fetchData();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [selectedMonth]);
+    fetchTransactions();
+    fetchGoals();
+  }, []);
 
-  async function fetchData() {
-    setError("");
+  const fetchTransactions = async () => {
     try {
-      // Replace these with your real API endpoints.
-      // Example: const catsRes = await axios.get(`/api/budgets/month/${selectedMonth}`);
-      //          const goalsRes = await axios.get(`/api/goals/list`);
-      // For now we'll use the mock data to show layout immediately:
-      setTimeout(() => {
-        setCategories(MOCK_CATEGORIES);
-        setGoals(MOCK_GOALS);
-      }, 200); // slight delay to simulate network
+      const res = await axios.get(
+        `http://localhost:8080/api/transactions/list/${userId}`
+      );
+      setTransactions(res.data);
+      calculateBudget(res.data);
     } catch (err) {
-      console.error(err);
-      setError("Failed to load data");
-      // fallback to mock so UI still shows
-      setCategories(MOCK_CATEGORIES);
-      setGoals(MOCK_GOALS);
+      console.error("Error fetching transactions", err);
     }
-  }
+  };
 
-  function handleMonthChange(e) {
-    setSelectedMonth(e.target.value);
-  }
+  const fetchGoals = async () => {
+    try {
+      const res = await axios.get(
+        `http://localhost:8080/api/goals/list/${userId}`
+      );
+      setGoals(res.data);
+    } catch (err) {
+      console.error("Error fetching goals", err);
+    }
+  };
 
-  function addGoal() {
-    if (!newGoalName || !newGoalTarget) return alert("Enter name and target");
-    const newGoal = {
-      id: Date.now(),
-      name: newGoalName,
-      target: Number(newGoalTarget),
-      saved: 0,
-    };
-    setGoals((g) => [newGoal, ...g]);
-    setNewGoalName("");
-    setNewGoalTarget("");
-  }
+  // 🔹 CORE BUDGET LOGIC
+  const calculateBudget = (transactions) => {
+    const expenses = transactions.filter((t) => t.type === "expense");
 
-  function deleteGoal(id) {
-    setGoals((g) => g.filter((x) => x.id !== id));
-  }
+    const categoryMap = {};
+    expenses.forEach((t) => {
+      categoryMap[t.category] =
+        (categoryMap[t.category] || 0) + t.amount;
+    });
 
-  // computed summary
-  const totalBudget = categories.reduce((s, c) => s + (c.budget || 0), 0);
-  const totalSpent = categories.reduce((s, c) => s + (c.spent || 0), 0);
+    const finalCategories = Object.keys(CATEGORY_LIMITS).map((cat) => ({
+      name: cat,
+      budget: CATEGORY_LIMITS[cat],
+      spent: categoryMap[cat] || 0,
+    }));
+
+    setCategories(finalCategories);
+  };
+
+  // 🔹 SUMMARY
+  const totalBudget = categories.reduce((s, c) => s + c.budget, 0);
+  const totalSpent = categories.reduce((s, c) => s + c.spent, 0);
   const remaining = totalBudget - totalSpent;
 
   return (
     <div className="budget-page">
-      <div className="budget-header">
-        <a className="back-arrow" href="/dashboard">←</a>
-        <h1>Budget</h1>
-      </div>
-
-      <div className="budget-controls">
-        <label htmlFor="month">Month</label>
-        <input id="month" type="month" value={selectedMonth} onChange={handleMonthChange} />
-        <button className="budget-btn-primary" onClick={fetchData}>Refresh</button>
-        {error && <span className="budget-error">{error}</span>}
-      </div>
+      <h1>Budget</h1>
 
       <div className="budget-container">
+        {/* ------------------ BUDGET ------------------ */}
         <div className="budget-card">
-          <h3 className="card-title">Monthly Budget</h3>
+          <h3>Monthly Budget</h3>
 
-          {categories.length === 0 ? (
-            <p className="muted">No categories found.</p>
-          ) : (
-            categories.map((c) => {
-              const used = Math.min(100, Math.round(((c.spent || 0) / (c.budget || 1)) * 100));
-              const remainingText = (c.budget - (c.spent || 0));
-              return (
-                <div key={c.id} className="budget-row">
-                  <div className="row-left">
-                    <div className="icon-placeholder">🍽️</div>
-                    <div className="row-meta">
-                      <div className="cat-name">{c.name}</div>
-                      <div className="cat-sub">{`₹${remainingText.toLocaleString()} remaining • ${used}% used`}</div>
-                      <div className="progress-bar">
-                        <div className="progress-fill" style={{ width: used + "%" }} />
-                      </div>
-                    </div>
+          {categories.map((c) => {
+            const used = Math.min(
+              100,
+              Math.round((c.spent / c.budget) * 100)
+            );
+
+            return (
+              <div key={c.name} className="budget-row">
+                <div>
+                  <b>{c.name}</b>
+                  <div>
+                    ₹{c.budget - c.spent} remaining • {used}% used
                   </div>
-                  <div className="row-right">₹{c.budget.toLocaleString()}</div>
+                  <div className="progress-bar">
+                    <div
+                      className="progress-fill"
+                      style={{ width: `${used}%` }}
+                    />
+                  </div>
                 </div>
-              );
-            })
-          )}
+                <div>₹{c.budget}</div>
+              </div>
+            );
+          })}
 
-          <h4 className="section-title">Savings Goals</h4>
-
-          <div className="goal-input-row">
-            <input
-              className="goal-input"
-              placeholder="Goal name"
-              value={newGoalName}
-              onChange={(e) => setNewGoalName(e.target.value)}
-            />
-            <input
-              className="goal-input"
-              placeholder="Target"
-              type="number"
-              value={newGoalTarget}
-              onChange={(e) => setNewGoalTarget(e.target.value)}
-            />
-            <button className="add-goal-btn" onClick={addGoal}>Add</button>
-          </div>
+          {/* ------------------ GOALS ------------------ */}
+          <h3 style={{ marginTop: "20px" }}>Savings Goals</h3>
 
           {goals.length === 0 ? (
-            <p className="muted">No savings goals yet.</p>
+            <p>No savings goals yet.</p>
           ) : (
             goals.map((g) => {
-              const pct = Math.min(100, Math.round(((g.saved || 0) / (g.target || 1)) * 100));
+              const saved = g.savedAmount || 0;
+              const target = g.targetAmount || 1;
+              const remainingGoal = target - saved;
+              const percent = Math.min(
+                100,
+                Math.round((saved / target) * 100)
+              );
+
               return (
                 <div key={g.id} className="goal-row">
-                  <div className="goal-left">
-                    <div className="goal-icon">🎯</div>
-                    <div>
-                      <div className="goal-name">{g.name}</div>
-                      <div className="goal-sub">₹{(g.target - (g.saved || 0)).toLocaleString()} remaining</div>
-                      <div className="progress-bar small">
-                        <div className="progress-fill goal" style={{ width: pct + "%" }} />
-                      </div>
+                  <div>
+                    <b>{g.name}</b>
+                    <div>₹{remainingGoal} remaining</div>
+                    <div className="progress-bar small">
+                      <div
+                        className="progress-fill goal"
+                        style={{ width: `${percent}%` }}
+                      />
                     </div>
-                  </div>
-                  <div className="goal-right">
-                    <button className="goal-delete" onClick={() => deleteGoal(g.id)}>✕</button>
                   </div>
                 </div>
               );
@@ -164,20 +137,12 @@ export default function Budget() {
           )}
         </div>
 
+        {/* ------------------ SUMMARY ------------------ */}
         <aside className="budget-summary">
           <h3>Summary</h3>
-          <div className="summary-row">
-            <div>Total Budget</div>
-            <div className="summary-value">₹{totalBudget.toLocaleString()}</div>
-          </div>
-          <div className="summary-row">
-            <div>Total Spent</div>
-            <div className="summary-value">₹{totalSpent.toLocaleString()}</div>
-          </div>
-          <div className="summary-row">
-            <div>Remaining</div>
-            <div className="summary-value">₹{remaining.toLocaleString()}</div>
-          </div>
+          <p>Total Budget: ₹{totalBudget}</p>
+          <p>Total Spent: ₹{totalSpent}</p>
+          <p>Remaining: ₹{remaining}</p>
         </aside>
       </div>
     </div>

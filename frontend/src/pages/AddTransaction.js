@@ -24,42 +24,46 @@ function AddTransaction() {
       return;
     }
 
-    // Ensure userId exists in localStorage
+    // ✅ get userId
     let userId = localStorage.getItem("userId");
     if (!userId) {
       userId = 1;
       localStorage.setItem("userId", "1");
     }
 
+    // ✅ IMPORTANT: normalized transaction object
     const transaction = {
       userId: Number(userId),
       title: description,
-      description: description,
+      description,
       amount: Number(amount),
-      category,
-      paymentMethod,
-      type,
+      category,              // Food, Travel, Shopping etc
+      paymentMethod,         // Cash, Bank, UPI
+      type,                  // income / expense
       date
     };
 
-    console.log("Sending:", transaction);
-
     try {
-      const response = await axios.post(
+      // 1️⃣ Save transaction
+      await axios.post(
         "http://localhost:8080/api/transactions",
         transaction,
-        {
-          headers: { "Content-Type": "application/json" }
-        }
+        { headers: { "Content-Type": "application/json" } }
       );
 
-      console.log("Response:", response.data);
+      // 2️⃣ IF INCOME → auto-save to goals
+      if (type === "income") {
+        await axios.post(
+          `http://localhost:8080/api/goals/auto-save/${userId}`,
+          { amount: Number(amount) }
+        );
+      }
 
       toast.success("✔ Transaction added successfully!", {
         position: "top-center",
       });
 
-      // Reset UI
+      // reset
       setAmount("");
       setDescription("");
       setCategory("");
@@ -70,7 +74,7 @@ function AddTransaction() {
       setTimeout(() => navigate("/transactions"), 800);
 
     } catch (error) {
-      console.error("Error:", error.response?.data || error);
+      console.error(error);
       toast.error("❌ Failed to add transaction!", { position: "top-center" });
     }
   };
@@ -96,15 +100,15 @@ function AddTransaction() {
             onChange={(e) => setDescription(e.target.value)}
           />
 
+          {/* ✅ CATEGORIES MUST MATCH BUDGET PAGE */}
           <select value={category} onChange={(e) => setCategory(e.target.value)}>
             <option value="">Select Category</option>
-            <option>Food</option>
-            <option>Travel</option>
-            <option>Rent</option>
-            <option>Salary</option>
-            <option>Shopping</option>
-            <option>Health</option>
-            <option>Other</option>
+            <option value="Food">Food</option>
+            <option value="Travel">Travel</option>
+            <option value="Shopping">Shopping</option>
+            <option value="Health">Health</option>
+            <option value="Other">Other</option>
+            <option value="Salary">Salary</option>
           </select>
 
           <select value={paymentMethod} onChange={(e) => setPaymentMethod(e.target.value)}>
@@ -121,7 +125,11 @@ function AddTransaction() {
             <option value="expense">Expense</option>
           </select>
 
-          <input type="date" value={date} onChange={(e) => setDate(e.target.value)} />
+          <input
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+          />
 
           <button type="submit" className="save-btn">Save</button>
         </form>

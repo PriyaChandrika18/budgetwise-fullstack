@@ -16,12 +16,13 @@
 }
 
 .sidebar .logo {
-  font-size: 20px;
+  font-size: 30px;
   margin-bottom: 30px;
   text-align: center;
   transition: opacity 0.3s ease;
 }
 
+/* ---------------- NAV ---------------- */
 .sidebar nav {
   display: flex;
   flex-direction: column;
@@ -44,6 +45,27 @@
   background: #4a79bc;
 }
 
+/* ---------------- 🤖 AI ASSISTANT BUTTON ---------------- */
+.ai-btn {
+  color: white;
+  background: none;
+  border: none;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s;
+  text-align: left;
+}
+
+.ai-btn:hover {
+  background: #6d4fa3;
+}
+
+/* ---------------- LOGOUT ---------------- */
 .logout-btn {
   margin-top: auto;
   color: #f87171;

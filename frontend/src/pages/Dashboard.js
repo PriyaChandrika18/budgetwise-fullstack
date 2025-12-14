@@ -1,5 +1,4 @@
 // src/pages/Dashboard.js
-
 import React, { useEffect, useState } from "react";
 import "../styles/Dashboard.css";
 
@@ -32,81 +31,40 @@ ChartJS.register(
 );
 
 const Dashboard = () => {
-  const userId = 1; // temporary until login
+  const userId = Number(localStorage.getItem("userId")) || 1;
 
   // ---------- STATES ----------
-  const [summary, setSummary] = useState({ income: 0, expense: 0, balance: 0 });
+  const [summary, setSummary] = useState({
+    income: 0,
+    expense: 0,
+    balance: 0,
+  });
   const [goals, setGoals] = useState([]);
   const [transactions, setTransactions] = useState([]);
 
   const [search, setSearch] = useState("");
   const [monthFilter, setMonthFilter] = useState("");
 
-  // ---------- ANIMATION / OPTIONS ----------
-  const commonAnimation = {
-    animation: {
-      duration: 1200,
-      easing: "easeOutQuart",
-    },
-  };
-
-  const pieOptions = {
-    ...commonAnimation,
-    plugins: {
-      legend: { position: "bottom" },
-    },
-  };
-
-  const barOptions = {
-    ...commonAnimation,
-    plugins: {
-      legend: { position: "top" },
-    },
-    responsive: true,
-    maintainAspectRatio: false,
-  };
-
-  const lineOptions = {
-    ...commonAnimation,
-    plugins: {
-      legend: { position: "top" },
-    },
-    responsive: true,
-    maintainAspectRatio: false,
-  };
-
   // ---------- API CALLS ----------
   const fetchSummary = async () => {
-    try {
-      const res = await fetch(
-        `http://localhost:8080/api/transactions/summary/${userId}`
-      );
-      setSummary(await res.json());
-    } catch (err) {
-      console.error("Error fetching summary:", err);
-    }
+    const res = await fetch(
+      `http://localhost:8080/api/transactions/summary/${userId}`
+    );
+    setSummary(await res.json());
   };
 
   const fetchGoals = async () => {
-    try {
-      const res = await fetch(
-        `http://localhost:8080/api/goals/list/${userId}`
-      );
-      setGoals(await res.json());
-    } catch (err) {
-      console.error("Error fetching goals:", err);
-    }
+    const res = await fetch(
+      `http://localhost:8080/api/goals/list/${userId}`
+    );
+    setGoals(await res.json());
   };
 
   const fetchTransactions = async () => {
-    try {
-      const res = await fetch(
-        `http://localhost:8080/api/transactions/list/${userId}`
-      );
-      setTransactions(await res.json());
-    } catch (err) {
-      console.error("Error fetching transactions:", err);
-    }
+    const res = await fetch(
+      `http://localhost:8080/api/transactions/list/${userId}`
+    );
+    setTransactions(await res.json());
   };
 
   useEffect(() => {
@@ -118,108 +76,91 @@ const Dashboard = () => {
   // ---------- FILTERING ----------
   const filteredTransactions = transactions.filter((t) => {
     const matchSearch = t.category
-      .toLowerCase()
+      ?.toLowerCase()
       .includes(search.toLowerCase());
 
     const matchMonth =
       !monthFilter ||
-      t.date.slice(3) === monthFilter.split("-").reverse().join("-");
+      t.date?.slice(0, 7) === monthFilter;
 
     return matchSearch && matchMonth;
   });
 
-  // ---------- CHART DATA ----------
-
+  // ---------- PIE CHART ----------
   const incomeExpensePie = {
     labels: ["Income", "Expense"],
     datasets: [
       {
-        data: [summary.income, summary.expense],
+        data: [
+          summary.income || 0,
+          summary.expense || 0,
+        ],
         backgroundColor: ["#22C55E", "#EF4444"],
       },
     ],
   };
 
-  // Spending by category bar chart
-  const spendingData = Object.values(
-    filteredTransactions.reduce((acc, t) => {
-      if (t.type === "expense") {
-        acc[t.category] = acc[t.category] || { category: t.category, amount: 0 };
-        acc[t.category].amount += t.amount;
-      }
-      return acc;
-    }, {})
-  );
+  // ---------- SPENDING BY CATEGORY ----------
+  const categoryMap = {};
+  filteredTransactions.forEach((t) => {
+    if (t.type === "expense") {
+      categoryMap[t.category] =
+        (categoryMap[t.category] || 0) + t.amount;
+    }
+  });
 
   const spendingChart = {
-    labels: spendingData.map((d) => d.category),
+    labels: Object.keys(categoryMap),
     datasets: [
       {
         label: "Expenses",
-        data: spendingData.map((d) => d.amount),
+        data: Object.values(categoryMap),
         backgroundColor: "#FF6B6B",
       },
     ],
   };
 
+  // ---------- GOAL CHART ----------
   const goalBarData = {
     labels: goals.map((g) => g.name),
     datasets: [
       {
         label: "Saved",
-        data: goals.map((g) => g.savedAmount),
+        data: goals.map((g) => g.savedAmount || 0),
         backgroundColor: "#36A2EB",
       },
       {
         label: "Target",
-        data: goals.map((g) => g.targetAmount),
+        data: goals.map((g) => g.targetAmount || 0),
         backgroundColor: "#A1A1AA",
       },
     ],
   };
 
-  // ----- MONTHLY SPENDING (TIMELINE) -----
+  // ---------- MONTHLY TIMELINE ----------
   const monthNames = [
-    "Jan",
-    "Feb",
-    "Mar",
-    "Apr",
-    "May",
-    "Jun",
-    "Jul",
-    "Aug",
-    "Sep",
-    "Oct",
-    "Nov",
-    "Dec",
+    "Jan","Feb","Mar","Apr","May","Jun",
+    "Jul","Aug","Sep","Oct","Nov","Dec",
   ];
 
   const monthlyMap = {};
   transactions.forEach((t) => {
     if (t.type !== "expense") return;
-    const [dd, mm, yyyy] = t.date.split("-");
-    const key = `${monthNames[parseInt(mm, 10) - 1]} ${yyyy}`;
-    if (!monthlyMap[key]) {
-      monthlyMap[key] = 0;
-    }
-    monthlyMap[key] += t.amount;
+    const [yyyy, mm] = t.date.split("-");
+    const key = `${monthNames[mm - 1]} ${yyyy}`;
+    monthlyMap[key] = (monthlyMap[key] || 0) + t.amount;
   });
 
-  const monthlyLabels = Object.keys(monthlyMap);
-  const monthlyValues = monthlyLabels.map((label) => monthlyMap[label]);
-
   const monthlySpendingData = {
-    labels: monthlyLabels,
+    labels: Object.keys(monthlyMap),
     datasets: [
       {
         label: "Monthly Expense",
-        data: monthlyValues,
+        data: Object.values(monthlyMap),
         borderColor: "#F97316",
-        backgroundColor: "rgba(249, 115, 22, 0.2)",
+        backgroundColor: "rgba(249,115,22,0.2)",
         tension: 0.3,
         fill: true,
-        pointRadius: 4,
-        pointHoverRadius: 6,
       },
     ],
   };
@@ -248,11 +189,11 @@ const Dashboard = () => {
     XLSX.writeFile(workbook, "transactions.xlsx");
   };
 
+  // ---------- UI ----------
   return (
     <div className="dashboard-container">
       <h2>📊 Budget Overview</h2>
 
-      {/* Summary Cards */}
       <div className="summary">
         <div className="card income">
           <h3>Total Income</h3>
@@ -268,10 +209,8 @@ const Dashboard = () => {
         </div>
       </div>
 
-      {/* Filters */}
       <div className="filters">
         <input
-          type="text"
           placeholder="Search category..."
           value={search}
           onChange={(e) => setSearch(e.target.value)}
@@ -281,80 +220,34 @@ const Dashboard = () => {
           value={monthFilter}
           onChange={(e) => setMonthFilter(e.target.value)}
         />
-
-        <button onClick={exportPDF}>📄 Export PDF</button>
-        <button onClick={exportExcel}>📊 Export Excel</button>
+        <button onClick={exportPDF}>Export PDF</button>
+        <button onClick={exportExcel}>Export Excel</button>
       </div>
 
-      {/* Charts */}
       <div className="chart-section">
-        {/* PIE CHART */}
         <div className="chart-box">
           <h3>Income vs Expense</h3>
-          {summary.income === 0 && summary.expense === 0 ? (
-            <p>No Data</p>
-          ) : (
-            <Pie data={incomeExpensePie} options={pieOptions} />
-          )}
+          <Pie data={incomeExpensePie} />
         </div>
 
-        {/* GOAL CHART */}
         <div className="chart-box">
           <h3>Goal Progress</h3>
-          {goals.length === 0 ? (
-            <p>No Goals</p>
-          ) : (
-            <Bar data={goalBarData} options={barOptions} />
-          )}
+          {goals.length === 0 ? <p>No Goals</p> : <Bar data={goalBarData} />}
         </div>
       </div>
 
-      {/* CATEGORY SPENDING */}
-      <div className="chart-box" style={{ marginTop: "20px" }}>
-        <h3>📦 Spending by Category</h3>
-        {spendingData.length === 0 ? (
-          <p>No expense data.</p>
+      <div className="chart-box">
+        <h3>Spending by Category</h3>
+        {Object.keys(categoryMap).length === 0 ? (
+          <p>No expense data</p>
         ) : (
-          <div style={{ height: "280px" }}>
-            <Bar data={spendingChart} options={barOptions} />
-          </div>
+          <Bar data={spendingChart} />
         )}
       </div>
 
-      {/* MONTHLY TIMELINE */}
-      <div className="chart-box" style={{ marginTop: "20px" }}>
-        <h3>📆 Monthly Spending Timeline</h3>
-        {monthlyLabels.length === 0 ? (
-          <p>No expense data across months.</p>
-        ) : (
-          <div style={{ height: "280px" }}>
-            <Line data={monthlySpendingData} options={lineOptions} />
-          </div>
-        )}
-      </div>
-
-      {/* Recent Transactions */}
-      <div className="transactions-section">
-        <h3>Recent Transactions</h3>
-        {filteredTransactions.length === 0 ? (
-          <p>No transactions found.</p>
-        ) : (
-          filteredTransactions.map((tx) => (
-            <div key={tx.id} className="transaction-item">
-              <span>
-                <strong>
-                  {tx.description || tx.title || tx.category}
-                </strong>{" "}
-                — {tx.category}
-              </span>
-              <span
-                className={tx.type === "income" ? "green" : "red"}
-              >
-                {tx.type === "income" ? "+" : "-"}₹{tx.amount}
-              </span>
-            </div>
-          ))
-        )}
+      <div className="chart-box">
+        <h3>Monthly Spending</h3>
+        <Line data={monthlySpendingData} />
       </div>
     </div>
   );
